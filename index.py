@@ -1,12 +1,16 @@
-import os
-
 import dash
+import dash_auth
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.express as px
-import pandas as pd
+import plotly
 
 from app import app
+
+VALID_USERNAME_PASSWORD_PAIRS = {
+    'hello': 'world'
+}
+
+auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
 def build_banner():
@@ -17,7 +21,7 @@ def build_banner():
             html.Div(
                 id="banner-text",
                 children=[
-                    html.H5("TalentWorth"),
+                    html.H4("TalentWorth"),
                     html.H6("Make your skills with future trend"),
                 ],
             ),
@@ -27,6 +31,8 @@ def build_banner():
                     html.Button(
                         id="learn-more-button", children="LEARN MORE", n_clicks=0
                     ),
+                    html.Img(id="logo", src=app.get_asset_url(
+                        "talent-worth-logo.jpeg")),
                 ],
             ),
         ],
@@ -45,14 +51,14 @@ def build_tabs():
                 children=[
                     dcc.Tab(
                         id="Specs-tab",
-                        label="Specification Settings",
+                        label="Job Trend",
                         value="tab1",
                         className="custom-tab",
                         selected_className="custom-tab--selected",
                     ),
                     dcc.Tab(
                         id="Control-chart-tab",
-                        label="Control Charts Dashboard",
+                        label="Match skills",
                         value="tab2",
                         className="custom-tab",
                         selected_className="custom-tab--selected",

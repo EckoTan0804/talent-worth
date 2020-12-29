@@ -46,6 +46,15 @@ body {
   width: 100%;
 }
 
+.banner h4 {
+  font-family: 'Open Sans Bold', sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+  font-size: 4rem;
+  letter-spacing: 0.1rem;
+  /* text-transform: uppercase; */
+}
+
 
 .banner h5 {
   font-family: 'Open Sans Semi Bold', sans-serif;
@@ -59,6 +68,7 @@ body {
 .banner h6 {
   font-size: 1.6rem;
   line-height: 1;
+  /* font-style: italic */
 }
 
 .banner button {
