@@ -7,7 +7,7 @@ import plotly
 from app import app
 
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'hello': 'world'
+    'Alex': '1234'
 }
 
 auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
@@ -28,12 +28,12 @@ def build_banner():
             html.Div(
                 id="banner-logo",
                 children=[
-                    html.Button(
-                        id="learn-more-button", children="LEARN MORE", n_clicks=0
-                    ),
-                    html.Img(id="logo", src=app.get_asset_url(
-                        "talent-worth-logo.jpeg")),
+                    html.H5(
+                        f"Hello, {list(VALID_USERNAME_PASSWORD_PAIRS.keys())[0]}"),
+                    # html.Img(id="logo", src=app.get_asset_url(
+                    #     "talent-worth-logo.jpeg")),
                 ],
+
             ),
         ],
     )
@@ -46,20 +46,27 @@ def build_tabs():
         children=[
             dcc.Tabs(
                 id="app-tabs",
-                value="tab2",
+                value="job-trend",
                 className="custom-tabs",
                 children=[
                     dcc.Tab(
-                        id="Specs-tab",
+                        # id="Specs-tab",
                         label="Job Trend",
-                        value="tab1",
+                        value="job-trend",
                         className="custom-tab",
                         selected_className="custom-tab--selected",
                     ),
                     dcc.Tab(
-                        id="Control-chart-tab",
-                        label="Match skills",
-                        value="tab2",
+                        # id="Control-chart-tab",
+                        label="Match Skills",
+                        value="match-skills",
+                        className="custom-tab",
+                        selected_className="custom-tab--selected",
+                    ),
+                    dcc.Tab(
+                        # id="Control-chart-tab",
+                        label="About Us",
+                        value="about-us",
                         className="custom-tab",
                         selected_className="custom-tab--selected",
                     ),
