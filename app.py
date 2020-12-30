@@ -1,3 +1,5 @@
+import os
+
 import dash
 import dash_auth
 import dash_core_components as dcc
@@ -14,6 +16,7 @@ from utils import set_fig_layout
 #     'Alex': '1234'
 # }
 # auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
+
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 server = app.server
 
@@ -190,34 +193,29 @@ def render_tab_content(tab_switch):
     return build_about_us_tab()
 
 
-def build_app():
-    """
-    Build layout of index page
-    """
-    app.layout = html.Div(
-        id="big-app-container",
-        children=[
-            build_banner(),
-            dcc.Interval(
-                id="interval-component",
-                interval=2 * 1000,  # in milliseconds
-                n_intervals=50,  # start at batch 50
-                disabled=True,
-            ),
-            html.Div(
-                id="app-container",
-                children=[
-                    build_tabs(),
-                    # Main app
-                    html.Div(id="app-content"),
-                ],
-            ),
-            dcc.Store(id="value-setter-store", data=init_value_setter_store()),
-            dcc.Store(id="n-interval-stage", data=50),
-        ],
-    )
+app.layout = html.Div(
+    id="big-app-container",
+    children=[
+        build_banner(),
+        dcc.Interval(
+            id="interval-component",
+            interval=2 * 1000,  # in milliseconds
+            n_intervals=50,  # start at batch 50
+            disabled=True,
+        ),
+        html.Div(
+            id="app-container",
+            children=[
+                build_tabs(),
+                # Main app
+                html.Div(id="app-content"),
+            ],
+        ),
+        dcc.Store(id="value-setter-store", data=init_value_setter_store()),
+        dcc.Store(id="n-interval-stage", data=50),
+    ],
+)
 
 
 if __name__ == '__main__':
-    build_app()
     app.run_server(debug=True, port=8052)
