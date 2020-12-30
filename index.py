@@ -10,10 +10,10 @@ from app import app
 from utils import set_fig_layout
 
 ####################################### Mock up log-in ###########################################################
-VALID_USERNAME_PASSWORD_PAIRS = {
-    'Alex': '1234'
-}
-auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
+# VALID_USERNAME_PASSWORD_PAIRS = {
+#     'Alex': '1234'
+# }
+# auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
 df = pd.read_csv(
