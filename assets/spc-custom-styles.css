@@ -41,7 +41,7 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #4B5460;
+  /* border-bottom: 1px solid #4B5460; */
   padding: 1rem 10rem;
   width: 100%;
 }
@@ -139,7 +139,7 @@ body {
 /* Tabs
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
-#tabs {
+/* #tabs {
   width: 100%;
 }
 
@@ -176,7 +176,7 @@ body {
 
 #Control-chart-tab.custom-tab {
   margin-left: 3px;
-}
+} */
 
 .section-banner {
   color: darkgray;
