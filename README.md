@@ -34,7 +34,7 @@ pip install -r requirements.txt
 Run this app locally:
 
 ```bash
-python index.py
+python app.py
 ```
 
 Then open http://127.0.0.1:8052/ in browser, you'll see a live-updating app.
