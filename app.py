@@ -58,9 +58,17 @@ def build_banner():
             html.Div(
                 id="banner-logo",
                 children=[
-                    # html.H5(f"Hello, {list(VALID_USERNAME_PASSWORD_PAIRS.keys())[0]}"),
-                    html.Button(id="log-out-button",
-                                children="LOG OUT", n_clicks=0),
+                    html.Div(
+                        [
+                            html.A(
+                                html.Button("View on Github",
+                                            id="view-on-github"),
+                                href="https://github.com/EckoTan0804/talent-worth",
+
+                            )
+                        ]
+
+                    ),
                     # html.Img(id="logo", src=app.get_asset_url(
                     #     "talent-worth-logo.jpeg")),
                 ],
