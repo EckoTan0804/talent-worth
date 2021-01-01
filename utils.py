@@ -2,8 +2,18 @@ from plotly.graph_objs import Layout
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import plotly.express as px
 
 GRID_COLOR = "#595959"
+
+JOB_TITLES = [
+    'Business Analyst',
+    'Data Analyst',
+    'Data Scientist',
+    'Data Engineer/DBA',
+    'Software Engineer',
+    'Statistician/Research Scientist'
+]
 
 
 class PolarPlot():
@@ -210,14 +220,7 @@ glassdoor = pd.read_csv(path)
 
 
 def get_salary_line_plot():
-    traces = [
-        'Business Analyst',
-        'Data Analyst',
-        'Data Scientist',
-        'Data Engineer/DBA',
-        'Software Engineer',
-        'Statistician/Research Scientist'
-    ]
+    traces = JOB_TITLES
     x_names = [
         '0-49 employees',
         '50-249 employees',
@@ -283,3 +286,25 @@ def get_job_proportion_polar_plot(countries):
         job_proportion_polar_plot.add_data(proportion, country)
 
     return job_proportion_polar_plot
+
+
+def get_job_propotion_pie_chart(country):
+    glassdoor_country = glassdoor[glassdoor.Country == f"{country}"].groupby(
+        ["JobTitle"], as_index=False).Count.sum().Count.tolist()
+    glassdoor_country = (np.array(glassdoor_country) /
+                         sum(glassdoor_country) * 100).tolist()
+
+    fig = go.Figure(data=go.Pie(labels=JOB_TITLES, values=glassdoor_country))
+    fig.update_traces(
+        hoverinfo="label+percent",
+        textposition='inside',
+        textinfo='label',
+    )
+    fig.update_layout(
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+        paper_bgcolor="rgba(0, 0, 0, 0)",
+        showlegend=False,
+        margin=dict(t=10),
+        # height=400
+    )
+    return fig

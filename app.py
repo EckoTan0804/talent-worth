@@ -165,6 +165,10 @@ def build_top_panel():
                 className="four columns",
                 children=[
                     generate_section_banner("Job Proportion"),
+                    dcc.Graph(
+                        id="job-proportion-pie",
+                        figure=utils.get_job_propotion_pie_chart("Germany")
+                    )
                 ],
             ),
         ],
