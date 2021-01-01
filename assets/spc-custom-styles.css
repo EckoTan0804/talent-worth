@@ -247,12 +247,26 @@ body {
   border-top: #1E2130 solid 0.8rem;
 }
 
+.panel {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  border-top: #1E2130 solid 0.8rem;
+}
+
 #metric-summary-session {
   height: 100%;
   flex: 1 1 auto;
 }
 
 #ooc-piechart-outer {
+  height: 100%;
+  margin: 0;
+  border-left: #1E2130 solid 0.8rem;
+  flex: 1 1 auto;
+}
+
+.polar-chart {
   height: 100%;
   margin: 0;
   border-left: #1E2130 solid 0.8rem;

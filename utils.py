@@ -27,7 +27,8 @@ class PolarPlot():
             autosize=True,
             font_color="white",
             uirevision=True,
-            height=600,
+            height=400,
+            margin=dict(t=10)
         )
 
     def update_commom_polar_layout(self):
@@ -42,11 +43,13 @@ class PolarPlot():
             polar_radialaxis_tickfont_color='darkgrey',
             polar_radialaxis_showline=False,
             polar_radialaxis_layer='below traces',
-            polar_radialaxis_gridcolor='gray',
+            polar_radialaxis_gridcolor=GRID_COLOR,
             polar_radialaxis_range=self.range,
 
-            polar_angularaxis_color='gray',
+            # polar_angularaxis_color='gray',
             polar_angularaxis_showline=True,
+            polar_angularaxis_linecolor=GRID_COLOR,
+            polar_angularaxis_gridcolor=GRID_COLOR,
         )
 
     def add_data(self, data, country, hover_template='%{r:0.0f}%'):
@@ -66,7 +69,7 @@ class PolarPlot():
                 showlegend=True,
                 line_shape='spline',
                 line_smoothing=0.8,
-                line_width=3
+                line_width=2
             )
         )
         # Calls the method that will update the max range
@@ -154,19 +157,6 @@ class LinePlot():
 
 ###############################################################################################
 
-def set_fig_layout(fig):
-    layout = Layout(
-        plot_bgcolor="rgba(0, 0, 0, 0)",
-        paper_bgcolor="rgba(0, 0, 0, 0)",
-        autosize=True,
-        font_color="white",
-        uirevision=True,
-        height=400,
-        # margin=dict(l=0, r=0, t=4, b=4),
-
-    )
-    return fig.update_layout(layout)
-
 
 # This function will be used to create different aggegations for plotting
 def plot_lines(line_plot, data, traces, x_names, agg_column, group_column, trace_column, hover_template):
@@ -182,6 +172,27 @@ def plot_lines(line_plot, data, traces, x_names, agg_column, group_column, trace
                            hover_template=hover_template)
 
 
+def plot_polar(polar_plot, data, traces, x_names, agg_column, group_column, trace_column, hover_template):
+
+    data_cp = data.copy()
+
+    for trace_name in traces:
+
+        if agg_column in ('JobDescription', 'CloudPlatf'):
+            data_cp['TempCol'] = data_cp[agg_column].apply(
+                lambda x: trace_name.lower() in x)
+        else:
+            data_cp['TempCol'] = data_cp[agg_column].apply(
+                lambda x: trace_name in x)
+
+        plot_data = data_cp.groupby([group_column], as_index=False).agg({
+            'TempCol': ['sum', 'count']})
+        plot_data['TempColPct'] = plot_data['TempCol']['sum'] / \
+            plot_data['TempCol']['count'] * 100
+        plot_data = plot_data.TempColPct.tolist()
+        polar_plot.add_data(plot_data, trace_name, hover_template)
+
+
 job_proportion_polar_plot = PolarPlot()
 time_of_coding_line_plot = LinePlot()
 salary_line_plot = LinePlot()
@@ -190,6 +201,12 @@ job_skills_polar_plot = PolarPlot()
 ####################################################################################################
 kaggle_csv_link = "https://gist.githubusercontent.com/EckoTan0804/7ba61515d185c6558f77504044b485bb/raw/4caac4c296138e0d40aa22c90ae38d712ba0531d/multiple_choice_responses_preprocessed.csv"
 kaggle = pd.read_csv(kaggle_csv_link)
+
+url = 'https://drive.google.com/file/d/1--PxypVvP0YmyZLLKheD01sxigJTkn2h/view?usp=sharing'
+path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
+glassdoor = pd.read_csv(path)
+
+####################################################################################################
 
 
 def get_salary_line_plot():
@@ -223,3 +240,46 @@ def get_salary_line_plot():
     yaxis_title = 'Average Salary (USD per Year)'
     salary_line_plot.update_axis_title(xaxis_title, yaxis_title)
     return salary_line_plot
+
+
+def get_job_skills_polar_plot():
+    traces = ['Bash', 'C', 'C++', 'Java', 'Javascript', 'MATLAB',
+              'Other', 'Python', 'R', 'SQL', 'TypeScript']
+
+    x_names = ['Business Analyst', 'Data Analyst', 'Data Scientist', 'Data Engineer/DBA',
+               'Software Engineer', 'Statistician/Research Scientist']
+
+    plot_polar(
+        job_skills_polar_plot,
+        data=kaggle,
+        traces=traces,
+        x_names=x_names,
+        agg_column='ProgLang',
+        group_column='JobTitle',
+        trace_column='ProgLang',
+        hover_template='%{r:0.0f}%'
+    )
+
+    job_skills_polar_plot.figure.update_layout(
+        polar_radialaxis_tickvals=[25, 50, 75],
+        polar_radialaxis_ticktext=['25%', '50%', '75%'],
+        polar_radialaxis_tickmode='array',
+    )
+
+    return job_skills_polar_plot
+
+
+def get_job_proportion_polar_plot(countries):
+    job_proportion_polar_plot.figure.data = tuple()
+    proportion_dict = dict()
+    for country in countries:
+        glassdoor_country = glassdoor[glassdoor.Country == f"{country}"].groupby(
+            ["JobTitle"], as_index=False).Count.sum().Count.tolist()
+        glassdoor_country = (np.array(glassdoor_country) /
+                             sum(glassdoor_country) * 100).tolist()
+        proportion_dict[f"{country}"] = glassdoor_country
+
+    for country, proportion in proportion_dict.items():
+        job_proportion_polar_plot.add_data(proportion, country)
+
+    return job_proportion_polar_plot

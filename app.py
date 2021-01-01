@@ -9,7 +9,6 @@ import dash_daq as daq
 import pandas as pd
 import plotly.express as px
 
-from utils import set_fig_layout
 import utils
 
 ####################################### Mock up log-in ###########################################################
@@ -20,24 +19,6 @@ import utils
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 server = app.server
-
-# df = pd.read_csv(
-#     'https://gist.githubusercontent.com/chriddyp/5d1ea79569ed194d432e56108a04d188/raw/a9f9e8076b837d541398e999dcbac2b2826a81f8/gdp-life-exp-2007.csv')
-
-# fig = px.scatter(df, x="gdp per capita", y="life expectancy",
-#                  size="population", color="continent", hover_name="country", size_max=60)
-# fig = set_fig_layout(fig)
-
-fig = utils.get_salary_line_plot().get_figure()
-
-
-df2 = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
-fig2 = px.bar(df2, x="Fruit", y="Amount", color="City", barmode="group")
-fig2 = set_fig_layout(fig2)
 
 
 def init_value_setter_store():
@@ -154,30 +135,50 @@ def build_top_panel():
         id="top-section-container",
         className="row",
         children=[
+            # Metrics summary
             html.Div(
                 id="metric-summary-session",
                 className="eight columns",
                 children=[
-                    generate_section_banner("Chart 1"),
-                    html.Div(children=[
-                        dcc.Graph(
-                            id="control-chart-live",
-                            figure=fig2,
-                        ),
-                    ]),
-                ]
-            )
-        ]
+                    generate_section_banner(
+                        "Job Proportion in Different Country"),
+                    html.Div(
+                        id="metric-div",
+                        children=[
+                            html.Div(
+                                # id="metric-rows",
+                                children=[
+                                    dcc.Graph(
+                                        id="job-proportion-polar",
+                                        figure=utils.get_job_proportion_polar_plot(
+                                            ["Germany", "France"]).get_figure()
+                                    )
+                                ],
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+            # Piechart
+            html.Div(
+                id="ooc-piechart-outer",
+                className="four columns",
+                children=[
+                    generate_section_banner("Job Proportion"),
+                ],
+            ),
+        ],
     )
 
 
 def build_chart_panel():
     return html.Div(
-        id="control-chart-container",
-        className="twelve columns",
+        # id="control-chart-container",
+        className="panel",
         children=[
             generate_section_banner("Salary"),
-            dcc.Graph(id="conrol-chart-live", figure=fig)
+            dcc.Graph(id="conrol-chart-live",
+                      figure=utils.get_salary_line_plot().get_figure())
         ]
     )
 
