@@ -34,6 +34,7 @@ def build_job_trend_control_panel():
                                  for country in utils.get_countries()],
                         value="China",
                         clearable=False,
+                        searchable=True,
                     ),
                 ]
             ),
@@ -50,6 +51,8 @@ def build_job_trend_control_panel():
                         value=["China"],
                         multi=True,
                         clearable=False,
+                        searchable=True,
+                        placeholder="Choose country"
                     ),
                 ]
             ),
