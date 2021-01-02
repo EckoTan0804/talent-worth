@@ -61,8 +61,9 @@ def build_banner():
                     # html.H5(f"Hello, {list(VALID_USERNAME_PASSWORD_PAIRS.keys())[0]}"),
                     html.Button(id="log-out-button",
                                 children="LOG OUT", n_clicks=0),
-                    # html.Img(id="logo", src=app.get_asset_url(
-                    #     "talent-worth-logo.jpeg")),
+                    html.Img(id="logo", src=app.get_asset_url(
+                        "logo2.png"), style={'height':'20%', 'width':'20%'}),
+
                 ],
 
             ),
@@ -179,7 +180,94 @@ def build_match_skills_tab():
 ####################################### About us tab ##############################################################
 
 def build_about_us_tab():
-    pass
+   
+   
+    return html.Div(children=[
+        html.H3('Group Members: ',
+            style = {
+                'textAlign' : 'center',
+                'color' : '#FFFFFF'
+            }
+        ),
+        html.H6(children = 'Linh',
+            style = {
+                'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+        html.H6(children = 'Haobin',
+            style = {
+                'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+
+        html.H6(children = 'Vinu',
+            style = {
+               'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40,
+            }
+        ),
+        html.H6(children = 'Kathi',
+            style = {
+                'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+        html.H6(children = 'Grace',
+            style = {
+               'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+        html.Br(),
+        html.H3('Sources: ',
+            style = {
+                'textAlign' : 'center',
+                'color' : '#FFFFFF'
+            }
+        ),
+        html.H6(['Source 1: ', html.A('link', href = 'https://www.onetcenter.org/database.html#individual-files')],
+            style = {
+               'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+        html.H6(['Source 2: ', html.A('link', href = 'https://www.peopledatalabs.com/related-title-dataset?utm_source=kaggle&Utm_medium=social&utm_campaign=related-title-dataset')],
+            style = {
+               'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+        html.H6(['Source 3: ', html.A('link', href = 'https://www.kaggle.com/maneeshdisodia/employment-skills')],
+            style = {
+               'textAlign' : 'left',
+                'color' : '#FFFFFF',
+                'marginLeft': 40
+            }
+        ),
+
+        dcc.Dropdown(
+            id = "data-sources",
+            options=[
+                {'label': 'Source 1', 'value': 'link1'},
+                {'label': 'Source 2', 'value': 'link2'},
+                {'label': 'Source 3', 'value': 'link3'},
+            ]
+        )
+    ])
+         
+     
+        
+
+   
 
 ####################################### Callbacks ##############################################################
 
