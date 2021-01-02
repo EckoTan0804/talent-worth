@@ -91,11 +91,10 @@ def build_tabs():
 job_trend_tab = build_job_trend_tab()
 match_skills_tab = build_match_skills_tab()
 
-# tabs switching
-
 
 @ app.callback(Output("app-content", "children"), [Input("app-tabs", "value")])
 def render_tab_content(tab_switch):
+    """Tabs switching"""
     if tab_switch == "job-trend":
         return job_trend_tab
     elif tab_switch == "match-skills":

@@ -26,7 +26,7 @@ def build_job_trend_control_panel():
                 id="metric-select-menu",
                 className='ten columns',
                 children=[
-                    html.H5("Job proportion"),
+                    html.H5("Job Proportion"),
                     html.Br(),
                     dcc.Dropdown(
                         id="single-country-dropdown",
@@ -41,7 +41,7 @@ def build_job_trend_control_panel():
                 id="metric-select-menu",
                 className='ten columns',
                 children=[
-                    html.H5("Job proportion in different country"),
+                    html.H5("Job Proportion in Different Countries"),
                     html.Br(),
                     dcc.Dropdown(
                         id="multi-country-dropdown",
@@ -57,7 +57,7 @@ def build_job_trend_control_panel():
                 id="metric-select-menu",
                 className='ten columns',
                 children=[
-                    html.H5("Job Titles"),
+                    html.H5("Company Size Vs. Salary"),
                     html.Br(),
                     dcc.Checklist(
                         id="job-titles-multi-select",
@@ -82,7 +82,7 @@ def build_job_trend_top_panel():
                 className="eight columns",
                 children=[
                     generate_section_banner(
-                        "Job Proportion in Different Country"),
+                        "Job Proportion in Different Countries"),
                     html.Div(
                         id="metric-div",
                         children=[

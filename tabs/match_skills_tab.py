@@ -28,7 +28,7 @@ def build_match_skills_control_panel():
                 id="metric-select-menu",
                 className='ten columns',
                 children=[
-                    html.H5("Skills in Job Description"),
+                    html.H5("Skills in Job Descriptions"),
                     html.Br(),
                     dcc.Checklist(
                         id="prog-language-multi-select",
@@ -42,7 +42,7 @@ def build_match_skills_control_panel():
                 id="metric-select-menu",
                 className='ten columns',
                 children=[
-                    html.H5("Time writing codes"),
+                    html.H5("Time of Coding"),
                     html.Br(),
                     dcc.Checklist(
                         id="time-writing-code-multi-select",
@@ -66,7 +66,7 @@ def build_match_skills_top_panel():
                 className="panel",
                 children=[
                     generate_section_banner(
-                        "Skills in Job Description"),
+                        "Skills in Job Descriptions"),
                     dcc.Graph(
                         id="job-skills-desc-polar-chart",
                         figure=utils.get_job_skills_polar_plot().get_figure()
@@ -82,7 +82,7 @@ def build_match_skills_chart_panel():
         # id="control-chart-container",
         className="panel",
         children=[
-            generate_section_banner("Salary"),
+            generate_section_banner("Quantity of Programming Languages"),
             dcc.Graph(id="time-writing-code-line-chart",
                       figure=utils.get_prog_language_line_plot().get_figure())
         ]
