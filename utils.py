@@ -18,7 +18,7 @@ JOB_TITLES = [
 PROGRAMMING_LANGUAGE = ['Bash', 'C', 'C++', 'Java', 'Javascript', 'MATLAB',
                         'Other', 'Python', 'R', 'SQL', 'TypeScript']
 
-TIME_WRITING_CODE = ['0 years', '< 1 years', '1-2 years',
+TIME_WRITING_CODE = ['< 1 years', '1-2 years',
                      '3-5 years', '5-10 years', '10-20 years', '20+ years']
 
 
@@ -264,8 +264,8 @@ def get_salary_line_plot(job_titles=None):
     return salary_line_plot
 
 
-def get_job_skills_polar_plot():
-    traces = PROGRAMMING_LANGUAGE
+def get_job_skills_polar_plot(selected_languages=None):
+    traces = selected_languages if selected_languages is not None else PROGRAMMING_LANGUAGE
 
     x_names = ['Business Analyst', 'Data Analyst', 'Data Scientist', 'Data Engineer/DBA',
                'Software Engineer', 'Statistician/Research Scientist']
@@ -336,9 +336,9 @@ def get_job_propotion_pie_chart(country):
     return fig
 
 
-def get_prog_language_line_plot():
-    # traces = list(set(kaggle.TimeWritingCode.tolist()))
-    traces = []
+def get_prog_language_line_plot(selected_time_writing_code=None):
+    traces = selected_time_writing_code if selected_time_writing_code is not None else list(
+        set(kaggle.TimeWritingCode.tolist()))
 
     x_names = ['{} languages'.format(x) for x in range(7)]
 
@@ -354,11 +354,11 @@ def get_prog_language_line_plot():
     )
 
     # Adding Averarage
-    plot_data = kaggle.groupby(
-        ['QtyProgLang'], as_index=False).agg({'Salary': 'mean'})
-    plot_data = plot_data.Salary.tolist()
-    prog_language_line_plot.add_data(
-        x_names, plot_data, 'Average', hover_template='U$%{y:,.2r}')
+    # plot_data = kaggle.groupby(
+    #     ['QtyProgLang'], as_index=False).agg({'Salary': 'mean'})
+    # plot_data = plot_data.Salary.tolist()
+    # prog_language_line_plot.add_data(
+    #     x_names, plot_data, 'Average', hover_template='U$%{y:,.2r}')
 
     xaxis_title = 'Quantity of programming languages used on a regular basis'
     yaxis_title = 'Average Salary (USD per Year)'

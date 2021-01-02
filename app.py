@@ -328,15 +328,16 @@ def build_match_skills_control_panel():
                     html.H5("Skills in Job Description"),
                     html.Br(),
                     dcc.Checklist(
+                        id="prog-language-multi-select",
                         options=[{"label": job, "value": job}
                                  for job in utils.get_programming_language()],
                         value=["Python"]
                     ),
-                    html.Div(
-                        id="utility-card-job-trend",
-                        children=[daq.StopButton(id="stop-button",
-                                                 children="Confirm")]
-                    ),
+                    # html.Div(
+                    #     id="utility-card-job-trend",
+                    #     children=[daq.StopButton(id="stop-button",
+                    #                              children="Confirm")]
+                    # ),
                 ]
             ),
             html.Div(
@@ -346,15 +347,16 @@ def build_match_skills_control_panel():
                     html.H5("Time writing codes"),
                     html.Br(),
                     dcc.Checklist(
+                        id="time-writing-code-multi-select",
                         options=[{"label": job, "value": job}
                                  for job in utils.get_time_writing_code()],
-                        value=["Python"]
+                        value=["1-2 years"],
                     ),
-                    html.Div(
-                        id="utility-card-job-trend",
-                        children=[daq.StopButton(id="stop-button",
-                                                 children="Confirm")]
-                    ),
+                    # html.Div(
+                    #     id="utility-card-job-trend",
+                    #     children=[daq.StopButton(id="stop-button",
+                    #                              children="Confirm")]
+                    # ),
                 ]
             ),
 
@@ -373,7 +375,7 @@ def build_match_skills_top_panel():
                     generate_section_banner(
                         "Skills in Job Description"),
                     dcc.Graph(
-                        id="job-skills-desc-polar",
+                        id="job-skills-desc-polar-chart",
                         figure=utils.get_job_skills_polar_plot().get_figure()
                     )
                 ]
@@ -382,16 +384,32 @@ def build_match_skills_top_panel():
     )
 
 
+@app.callback(
+    Output("job-skills-desc-polar-chart", "figure"),
+    Input("prog-language-multi-select", "value")
+)
+def update_job_skills_polar_plot(selected_languages):
+    return utils.get_job_skills_polar_plot(selected_languages).get_figure()
+
+
 def build_match_skills_chart_panel():
     return html.Div(
         # id="control-chart-container",
         className="panel",
         children=[
             generate_section_banner("Salary"),
-            dcc.Graph(id="conrol-chart-live",
+            dcc.Graph(id="time-writing-code-line-chart",
                       figure=utils.get_prog_language_line_plot().get_figure())
         ]
     )
+
+
+@app.callback(
+    Output("time-writing-code-line-chart", "figure"),
+    Input("time-writing-code-multi-select", "value")
+)
+def update_time_writing_code_line_chart(selected_time):
+    return utils.get_prog_language_line_plot(selected_time).get_figure()
 
 
 ####################################### About us tab ##############################################################
