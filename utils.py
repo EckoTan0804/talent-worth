@@ -1,8 +1,6 @@
-from plotly.graph_objs import Layout
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-import plotly.express as px
 from dataset_utils import get_datasets
 
 GRID_COLOR = "#595959"
@@ -26,7 +24,8 @@ COMPANY_SIZE = [
     '> 10,000 employees'
 ]
 
-# datasets
+
+##################################### datasets #####################################################
 kaggle, glassdoor = get_datasets()
 
 ##################################### polar chart plotting #########################################
