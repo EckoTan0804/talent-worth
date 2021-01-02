@@ -1,6 +1,6 @@
 # TalentWorth
 
-<img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/flask"><img alt="License - Python MIT" src="https://img.shields.io/badge/License-MIT-brightgreen"><img alt="Deploy - Heroku" src="https://img.shields.io/badge/deploy-Heroku-blueviolet">
+<img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/flask"> <img alt="License - Python MIT" src="https://img.shields.io/badge/License-MIT-brightgreen"> <img alt="Deploy - Heroku" src="https://img.shields.io/badge/deploy-Heroku-blueviolet">
 
 ## Introduction
 
