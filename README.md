@@ -48,7 +48,7 @@ Datasets we've used are
 - [2019 Kaggle Machine Learning & Data Science Survey](https://www.kaggle.com/c/kaggle-survey-2019/data): The most comprehensive dataset available on the state of ML and data science
 - [Country names 2 digit codes](https://gist.github.com/EckoTan0804/101eafa84b457355399261596698fefa) : List of countries names and their 2 digit codes
 
-Since size of dataset is large (e.g. Glassdoor dataset is more than 800MB), we've conducted data cleaning and preprocessing before applying datasets to our web app. Check out the [jupyter notebook](talent_worth.ipynb) for more details.
+Since size of dataset is large (e.g. Glassdoor dataset is more than 800MB), we've conducted data cleaning and preprocessing before applying datasets to our web app. Check out the [Jupyter Notebook](talent_worth.ipynb) for more details.
 
 ## Run
 
