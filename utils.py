@@ -307,7 +307,7 @@ def get_job_propotion_pie_chart(country):
         title=dict(
             text=country,
             x=0.5,
-            y=0.9,
+            y=0.95,
             xanchor="center",
             yanchor="top"
         ),
