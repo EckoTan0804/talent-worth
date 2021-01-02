@@ -3,9 +3,9 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from dataset_utils import get_datasets
 
 GRID_COLOR = "#595959"
-
 JOB_TITLES = [
     'Business Analyst',
     'Data Analyst',
@@ -14,21 +14,31 @@ JOB_TITLES = [
     'Software Engineer',
     'Statistician/Research Scientist'
 ]
-
 PROGRAMMING_LANGUAGE = ['Bash', 'C', 'C++', 'Java', 'Javascript', 'MATLAB',
                         'Other', 'Python', 'R', 'SQL', 'TypeScript']
-
 TIME_WRITING_CODE = ['< 1 years', '1-2 years',
                      '3-5 years', '5-10 years', '10-20 years', '20+ years']
+COMPANY_SIZE = [
+    '0-49 employees',
+    '50-249 employees',
+    '250-999 employees',
+    '1000-9,999 employees',
+    '> 10,000 employees'
+]
+
+# datasets
+kaggle, glassdoor = get_datasets()
+
+##################################### polar chart plotting #########################################
 
 
 class PolarPlot():
 
     def __init__(self):
-        self.figure = go.Figure()  # instatiates plotly figure
-        self.range = (0, 0)  # define the initial range of polar plots
+        self.figure = go.Figure()
+        self.range = (0, 0)
         self.theta = ['Business Analyst', 'Data Analyst', 'Data Scientist', 'Data Engineer/DBA',
-                      'Software Engineer', 'Statistician/Research Scientist', 'Business Analyst']  # Those are the Theta values for our plot
+                      'Software Engineer', 'Statistician/Research Scientist', 'Business Analyst']
 
     def update_common_layout(self):
         """
@@ -72,8 +82,8 @@ class PolarPlot():
         """
         Adds a trace to the figure following the same standard for each trace
         """
-        data.append(
-            data[0])  # add the first element to the end of the list, this will "close" the polar chart
+        # add the first element to the end of the list to "close" the polar chart
+        data.append(data[0])
         self.figure.add_trace(
             go.Scatterpolar(
                 r=data,
@@ -88,7 +98,7 @@ class PolarPlot():
                 line_width=2
             )
         )
-        # Calls the method that will update the max range
+        # update the max range
         self.update_range(data)
 
     def update_range(self, data):
@@ -96,7 +106,6 @@ class PolarPlot():
         Updates the range to be 110% of maximum value of all traces
         """
         max_range = max(data) * 1.1
-        # updates the range attribute
         self.range = (
             0, max_range) if max_range > self.range[1] else self.range
 
@@ -108,7 +117,29 @@ class PolarPlot():
         self.update_commom_polar_layout()
         return self.figure
 
-##############################################################################################
+
+def plot_polar(polar_plot, data, traces, x_names, agg_column, group_column, trace_column, hover_template):
+
+    data_cp = data.copy()
+    polar_plot.figure.data = tuple()
+
+    for trace_name in traces:
+
+        if agg_column in ('JobDescription', 'CloudPlatf'):
+            data_cp['TempCol'] = data_cp[agg_column].apply(
+                lambda x: trace_name.lower() in x)
+        else:
+            data_cp['TempCol'] = data_cp[agg_column].apply(
+                lambda x: trace_name in x)
+
+        plot_data = data_cp.groupby([group_column], as_index=False).agg({
+            'TempCol': ['sum', 'count']})
+        plot_data['TempColPct'] = plot_data['TempCol']['sum'] / \
+            plot_data['TempCol']['count'] * 100
+        plot_data = plot_data.TempColPct.tolist()
+        polar_plot.add_data(plot_data, trace_name, hover_template)
+
+##################################### Line chart plotting ############################################
 
 
 class LinePlot():
@@ -171,10 +202,6 @@ class LinePlot():
         return self.figure
 
 
-###############################################################################################
-
-
-# This function will be used to create different aggegations for plotting
 def plot_lines(line_plot, data, traces, x_names, agg_column, group_column, trace_column, hover_template):
     """
     Creates aggregation to plot
@@ -189,27 +216,7 @@ def plot_lines(line_plot, data, traces, x_names, agg_column, group_column, trace
                            hover_template=hover_template)
 
 
-def plot_polar(polar_plot, data, traces, x_names, agg_column, group_column, trace_column, hover_template):
-
-    data_cp = data.copy()
-    polar_plot.figure.data = tuple()
-
-    for trace_name in traces:
-
-        if agg_column in ('JobDescription', 'CloudPlatf'):
-            data_cp['TempCol'] = data_cp[agg_column].apply(
-                lambda x: trace_name.lower() in x)
-        else:
-            data_cp['TempCol'] = data_cp[agg_column].apply(
-                lambda x: trace_name in x)
-
-        plot_data = data_cp.groupby([group_column], as_index=False).agg({
-            'TempCol': ['sum', 'count']})
-        plot_data['TempColPct'] = plot_data['TempCol']['sum'] / \
-            plot_data['TempCol']['count'] * 100
-        plot_data = plot_data.TempColPct.tolist()
-        polar_plot.add_data(plot_data, trace_name, hover_template)
-
+########################################## getters ##################################################
 
 job_proportion_polar_plot = PolarPlot()
 time_of_coding_line_plot = LinePlot()
@@ -218,35 +225,11 @@ job_skills_polar_plot = PolarPlot()
 job_desc_polar_plot = PolarPlot()
 prog_language_line_plot = LinePlot()
 
-####################################################################################################
-kaggle_csv_link = "https://gist.githubusercontent.com/EckoTan0804/7ba61515d185c6558f77504044b485bb/raw/4caac4c296138e0d40aa22c90ae38d712ba0531d/multiple_choice_responses_preprocessed.csv"
-kaggle = pd.read_csv(kaggle_csv_link)
-
-url = 'https://drive.google.com/file/d/1--PxypVvP0YmyZLLKheD01sxigJTkn2h/view?usp=sharing'
-path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
-glassdoor = pd.read_csv(path)
-glassdoor = glassdoor.dropna(subset=["Country"])
-
-
-def get_countries():
-    countries = list(set(glassdoor["Country"]))
-    countries.sort()
-    return countries
-
-
-####################################################################################################
-
 
 def get_salary_line_plot(job_titles=None):
     # salary_line_plot.figure.data = tuple()
     traces = job_titles if job_titles is not None else JOB_TITLES
-    x_names = [
-        '0-49 employees',
-        '50-249 employees',
-        '250-999 employees',
-        '1000-9,999 employees',
-        '> 10,000 employees'
-    ]
+    x_names = COMPANY_SIZE
     plot_lines(
         salary_line_plot,
         data=kaggle,
@@ -267,8 +250,7 @@ def get_salary_line_plot(job_titles=None):
 def get_job_skills_polar_plot(selected_languages=None):
     traces = selected_languages if selected_languages is not None else PROGRAMMING_LANGUAGE
 
-    x_names = ['Business Analyst', 'Data Analyst', 'Data Scientist', 'Data Engineer/DBA',
-               'Software Engineer', 'Statistician/Research Scientist']
+    x_names = JOB_TITLES
 
     plot_polar(
         job_skills_polar_plot,
@@ -365,6 +347,12 @@ def get_prog_language_line_plot(selected_time_writing_code=None):
     prog_language_line_plot.update_axis_title(xaxis_title, yaxis_title)
 
     return prog_language_line_plot
+
+
+def get_countries():
+    countries = list(set(glassdoor["Country"]))
+    countries.sort()
+    return countries
 
 
 def get_job_titles():
