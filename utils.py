@@ -15,6 +15,12 @@ JOB_TITLES = [
     'Statistician/Research Scientist'
 ]
 
+PROGRAMMING_LANGUAGE = ['Bash', 'C', 'C++', 'Java', 'Javascript', 'MATLAB',
+                        'Other', 'Python', 'R', 'SQL', 'TypeScript']
+
+TIME_WRITING_CODE = ['0 years', '< 1 years', '1-2 years',
+                     '3-5 years', '5-10 years', '10-20 years', '20+ years']
+
 
 class PolarPlot():
 
@@ -173,6 +179,7 @@ def plot_lines(line_plot, data, traces, x_names, agg_column, group_column, trace
     """
     Creates aggregation to plot
     """
+    line_plot.figure.data = tuple()
     for trace_name in traces:
         data_filtered = data[data[trace_column] == trace_name]
         plot_data = data_filtered.groupby([group_column], as_index=False).agg({
@@ -185,6 +192,7 @@ def plot_lines(line_plot, data, traces, x_names, agg_column, group_column, trace
 def plot_polar(polar_plot, data, traces, x_names, agg_column, group_column, trace_column, hover_template):
 
     data_cp = data.copy()
+    polar_plot.figure.data = tuple()
 
     for trace_name in traces:
 
@@ -207,6 +215,8 @@ job_proportion_polar_plot = PolarPlot()
 time_of_coding_line_plot = LinePlot()
 salary_line_plot = LinePlot()
 job_skills_polar_plot = PolarPlot()
+job_desc_polar_plot = PolarPlot()
+prog_language_line_plot = LinePlot()
 
 ####################################################################################################
 kaggle_csv_link = "https://gist.githubusercontent.com/EckoTan0804/7ba61515d185c6558f77504044b485bb/raw/4caac4c296138e0d40aa22c90ae38d712ba0531d/multiple_choice_responses_preprocessed.csv"
@@ -215,11 +225,20 @@ kaggle = pd.read_csv(kaggle_csv_link)
 url = 'https://drive.google.com/file/d/1--PxypVvP0YmyZLLKheD01sxigJTkn2h/view?usp=sharing'
 path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
 glassdoor = pd.read_csv(path)
+glassdoor = glassdoor.dropna(subset=["Country"])
+
+
+def get_countries():
+    countries = list(set(glassdoor["Country"]))
+    countries.sort()
+    return countries
+
 
 ####################################################################################################
 
 
 def get_salary_line_plot():
+    # salary_line_plot.figure.data = tuple()
     traces = JOB_TITLES
     x_names = [
         '0-49 employees',
@@ -246,8 +265,7 @@ def get_salary_line_plot():
 
 
 def get_job_skills_polar_plot():
-    traces = ['Bash', 'C', 'C++', 'Java', 'Javascript', 'MATLAB',
-              'Other', 'Python', 'R', 'SQL', 'TypeScript']
+    traces = PROGRAMMING_LANGUAGE
 
     x_names = ['Business Analyst', 'Data Analyst', 'Data Scientist', 'Data Engineer/DBA',
                'Software Engineer', 'Statistician/Research Scientist']
@@ -305,6 +323,57 @@ def get_job_propotion_pie_chart(country):
         paper_bgcolor="rgba(0, 0, 0, 0)",
         showlegend=False,
         margin=dict(t=10),
+        title=dict(
+            text=country,
+            x=0.5,
+            y=0.9,
+            xanchor="center",
+            yanchor="top"
+        ),
+        font_color="white"
         # height=400
     )
     return fig
+
+
+def get_prog_language_line_plot():
+    # traces = list(set(kaggle.TimeWritingCode.tolist()))
+    traces = []
+
+    x_names = ['{} languages'.format(x) for x in range(7)]
+
+    plot_lines(
+        prog_language_line_plot,
+        data=kaggle,
+        traces=traces,
+        x_names=x_names,
+        agg_column='Salary',
+        group_column='QtyProgLang',
+        trace_column='TimeWritingCode',
+        hover_template='U$%{y:,.2r}'
+    )
+
+    # Adding Averarage
+    plot_data = kaggle.groupby(
+        ['QtyProgLang'], as_index=False).agg({'Salary': 'mean'})
+    plot_data = plot_data.Salary.tolist()
+    prog_language_line_plot.add_data(
+        x_names, plot_data, 'Average', hover_template='U$%{y:,.2r}')
+
+    xaxis_title = 'Quantity of programming languages used on a regular basis'
+    yaxis_title = 'Average Salary (USD per Year)'
+    prog_language_line_plot.update_axis_title(xaxis_title, yaxis_title)
+
+    return prog_language_line_plot
+
+
+def get_job_titles():
+    return JOB_TITLES
+
+
+def get_programming_language():
+    return PROGRAMMING_LANGUAGE
+
+
+def get_time_writing_code():
+    return TIME_WRITING_CODE

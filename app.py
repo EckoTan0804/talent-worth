@@ -108,34 +108,91 @@ def generate_section_banner(title):
 
 def build_job_trend_tab():
     return html.Div(
-        id="status-container",
+        # id="status-container",
+        className="status-container",
         children=[
-            build_quick_stats_panel(),
+            build_job_trend_control_panel(),
             html.Div(id="graphs-container", children=[
-                build_top_panel(),
-                build_chart_panel()
+                build_job_trend_top_panel(),
+                build_job_trend_chart_panel()
             ])
         ]
     )
 
 
-def build_quick_stats_panel():
+def build_job_trend_control_panel():
     return html.Div(
-        id="quick-stats",
+        id="quick-stats-job-trend",
         className="row",
         children=[
-            html.Div(id="utility-card",
-                     children=[daq.StopButton(id="stop-button", size=160, n_clicks=0, children="Click")],),
+            html.Div(
+                id="metric-select-menu",
+                className='ten columns',
+                children=[
+                    html.H5("Job proportion"),
+                    html.Br(),
+                    dcc.Dropdown(
+                        id="single-country-select-dropdown",
+                        options=[{"label": country, "value": country}
+                                 for country in utils.get_countries()],
+                        value=["China"],
+                    ),
+                    html.Div(
+                        id="utility-card-job-trend",
+                        children=[daq.StopButton(id="stop-button",
+                                                 children="Confirm")]
+                    ),
+
+                ]
+            ),
+            html.Div(
+                id="metric-select-menu",
+                className='ten columns',
+                children=[
+                    html.H5("Job proportion in different country"),
+                    html.Br(),
+                    dcc.Dropdown(
+                        id="multi-country-select-dropdown",
+                        options=[{"label": country, "value": country}
+                                 for country in utils.get_countries()],
+                        value=["China"],
+                        multi=True
+                    ),
+                    html.Div(
+                        id="utility-card-job-trend",
+                        children=[daq.StopButton(id="stop-button",
+                                                 children="Confirm")]
+                    ),
+                ]
+            ),
+            html.Div(
+                id="metric-select-menu",
+                className='ten columns',
+                children=[
+                    html.H5("Job Titles"),
+                    html.Br(),
+                    dcc.Checklist(
+                        options=[{"label": job, "value": job}
+                                 for job in utils.get_job_titles()],
+                        value=["Data Scientist"]
+                    ),
+                    html.Div(
+                        id="utility-card-job-trend",
+                        children=[daq.StopButton(id="stop-button",
+                                                 children="Confirm")]
+                    ),
+                ]
+            ),
+
         ],
     )
 
 
-def build_top_panel():
+def build_job_trend_top_panel():
     return html.Div(
         id="top-section-container",
         className="row",
         children=[
-            # Metrics summary
             html.Div(
                 id="metric-summary-session",
                 className="eight columns",
@@ -146,7 +203,6 @@ def build_top_panel():
                         id="metric-div",
                         children=[
                             html.Div(
-                                # id="metric-rows",
                                 children=[
                                     dcc.Graph(
                                         id="job-proportion-polar",
@@ -167,7 +223,7 @@ def build_top_panel():
                     generate_section_banner("Job Proportion"),
                     dcc.Graph(
                         id="job-proportion-pie",
-                        figure=utils.get_job_propotion_pie_chart("Germany")
+                        figure=utils.get_job_propotion_pie_chart("France")
                     )
                 ],
             ),
@@ -175,13 +231,13 @@ def build_top_panel():
     )
 
 
-def build_chart_panel():
+def build_job_trend_chart_panel():
     return html.Div(
         # id="control-chart-container",
         className="panel",
         children=[
             generate_section_banner("Salary"),
-            dcc.Graph(id="conrol-chart-live",
+            dcc.Graph(id="salary-line-plot",
                       figure=utils.get_salary_line_plot().get_figure())
         ]
     )
@@ -190,7 +246,96 @@ def build_chart_panel():
 
 
 def build_match_skills_tab():
-    pass
+    return html.Div(
+        className="status-container",
+        children=[
+            build_match_skills_control_panel(),
+            html.Div(
+                id="graphs-container",
+                children=[
+                    build_match_skills_top_panel(),
+                    build_match_skills_chart_panel()
+                ])
+        ]
+    )
+
+
+def build_match_skills_control_panel():
+    return html.Div(
+        id="quick-stats-match-skills",
+        className="row",
+        children=[
+            html.Div(
+                id="metric-select-menu",
+                className='ten columns',
+                children=[
+                    html.H5("Skills in Job Description"),
+                    html.Br(),
+                    dcc.Checklist(
+                        options=[{"label": job, "value": job}
+                                 for job in utils.get_programming_language()],
+                        value=["Python"]
+                    ),
+                    html.Div(
+                        id="utility-card-job-trend",
+                        children=[daq.StopButton(id="stop-button",
+                                                 children="Confirm")]
+                    ),
+                ]
+            ),
+            html.Div(
+                id="metric-select-menu",
+                className='ten columns',
+                children=[
+                    html.H5("Time writing codes"),
+                    html.Br(),
+                    dcc.Checklist(
+                        options=[{"label": job, "value": job}
+                                 for job in utils.get_time_writing_code()],
+                        value=["Python"]
+                    ),
+                    html.Div(
+                        id="utility-card-job-trend",
+                        children=[daq.StopButton(id="stop-button",
+                                                 children="Confirm")]
+                    ),
+                ]
+            ),
+
+        ],
+    )
+
+
+def build_match_skills_top_panel():
+    return html.Div(
+        id="top-section-container-match-skills",
+        className="row",
+        children=[
+            html.Div(
+                className="panel",
+                children=[
+                    generate_section_banner(
+                        "Skills in Job Description"),
+                    dcc.Graph(
+                        id="job-skills-desc-polar",
+                        figure=utils.get_job_skills_polar_plot().get_figure()
+                    )
+                ]
+            )
+        ],
+    )
+
+
+def build_match_skills_chart_panel():
+    return html.Div(
+        # id="control-chart-container",
+        className="panel",
+        children=[
+            generate_section_banner("Salary"),
+            dcc.Graph(id="conrol-chart-live",
+                      figure=utils.get_prog_language_line_plot().get_figure())
+        ]
+    )
 
 
 ####################################### About us tab ##############################################################
@@ -201,7 +346,7 @@ def build_about_us_tab():
 ####################################### Callbacks ##############################################################
 
 
-@app.callback(Output("app-content", "children"), [Input("app-tabs", "value")])
+@ app.callback(Output("app-content", "children"), [Input("app-tabs", "value")])
 def render_tab_content(tab_switch):
     if tab_switch == "job-trend":
         return build_job_trend_tab()
@@ -210,6 +355,7 @@ def render_tab_content(tab_switch):
     return build_about_us_tab()
 
 
+################################################################################################################
 app.layout = html.Div(
     id="big-app-container",
     children=[
