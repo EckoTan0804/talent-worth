@@ -94,7 +94,7 @@ class PolarPlot():
                 showlegend=True,
                 line_shape='spline',
                 line_smoothing=0.8,
-                line_width=2
+                line_width=3
             )
         )
         # update the max range
@@ -192,7 +192,7 @@ class LinePlot():
                 hovertemplate=hover_template,
                 line_shape='spline',
                 line_smoothing=0.8,
-                line_width=2
+                line_width=3
             )
         )
 
