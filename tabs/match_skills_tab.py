@@ -42,7 +42,7 @@ def build_match_skills_control_panel():
                 id="metric-select-menu",
                 className='ten columns',
                 children=[
-                    html.H5("Time of Coding"),
+                    html.H5("Coding Experience"),
                     html.Br(),
                     dcc.Checklist(
                         id="time-writing-code-multi-select",
