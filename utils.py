@@ -237,9 +237,9 @@ def get_countries():
 ####################################################################################################
 
 
-def get_salary_line_plot():
+def get_salary_line_plot(job_titles=None):
     # salary_line_plot.figure.data = tuple()
-    traces = JOB_TITLES
+    traces = job_titles if job_titles is not None else JOB_TITLES
     x_names = [
         '0-49 employees',
         '50-249 employees',

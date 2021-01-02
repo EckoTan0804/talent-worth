@@ -100,6 +100,15 @@ def build_tabs():
     )
 
 
+@ app.callback(Output("app-content", "children"), [Input("app-tabs", "value")])
+def render_tab_content(tab_switch):
+    if tab_switch == "job-trend":
+        return build_job_trend_tab()
+    elif tab_switch == "match-skills":
+        return build_match_skills_tab()
+    return build_about_us_tab()
+
+
 def generate_section_banner(title):
     return html.Div(className="section-banner", children=title)
 
@@ -132,16 +141,22 @@ def build_job_trend_control_panel():
                     html.H5("Job proportion"),
                     html.Br(),
                     dcc.Dropdown(
-                        id="single-country-select-dropdown",
+                        id="single-country-dropdown",
                         options=[{"label": country, "value": country}
                                  for country in utils.get_countries()],
-                        value=["China"],
+                        value="China",
+                        clearable=False,
                     ),
-                    html.Div(
-                        id="utility-card-job-trend",
-                        children=[daq.StopButton(id="stop-button",
-                                                 children="Confirm")]
-                    ),
+                    # html.Div(
+                    #     id="utility-card-job-trend",
+                    #     children=[
+                    #         html.Button(
+                    #             id="job-proportion-confirm-button",
+                    #             className="confirm-button",
+                    #             children="Confirm"
+                    #         )
+                    #     ]
+                    # ),
 
                 ]
             ),
@@ -152,17 +167,23 @@ def build_job_trend_control_panel():
                     html.H5("Job proportion in different country"),
                     html.Br(),
                     dcc.Dropdown(
-                        id="multi-country-select-dropdown",
+                        id="multi-country-dropdown",
                         options=[{"label": country, "value": country}
                                  for country in utils.get_countries()],
                         value=["China"],
-                        multi=True
+                        multi=True,
+                        clearable=False,
                     ),
-                    html.Div(
-                        id="utility-card-job-trend",
-                        children=[daq.StopButton(id="stop-button",
-                                                 children="Confirm")]
-                    ),
+                    # html.Div(
+                    #     id="utility-card-job-trend",
+                    #     children=[
+                    #         html.Button(
+                    #             id="job-proportion-different-country-confirm-button",
+                    #             className="confirm-button",
+                    #             children="Confirm"
+                    #         )
+                    #     ]
+                    # ),
                 ]
             ),
             html.Div(
@@ -172,15 +193,21 @@ def build_job_trend_control_panel():
                     html.H5("Job Titles"),
                     html.Br(),
                     dcc.Checklist(
+                        id="job-titles-multi-select",
                         options=[{"label": job, "value": job}
                                  for job in utils.get_job_titles()],
                         value=["Data Scientist"]
                     ),
-                    html.Div(
-                        id="utility-card-job-trend",
-                        children=[daq.StopButton(id="stop-button",
-                                                 children="Confirm")]
-                    ),
+                    # html.Div(
+                    #     id="utility-card-job-trend",
+                    #     children=[
+                    #         html.Button(
+                    #             id="job-titles-confirm-button",
+                    #             className="confirm-button",
+                    #             children="Confirm"
+                    #         )
+                    #     ]
+                    # ),
                 ]
             ),
 
@@ -205,9 +232,9 @@ def build_job_trend_top_panel():
                             html.Div(
                                 children=[
                                     dcc.Graph(
-                                        id="job-proportion-polar",
+                                        id="job-proportion-differnet-countries-polar",
                                         figure=utils.get_job_proportion_polar_plot(
-                                            ["Germany", "France"]).get_figure()
+                                            ["China"]).get_figure()
                                     )
                                 ],
                             ),
@@ -223,12 +250,32 @@ def build_job_trend_top_panel():
                     generate_section_banner("Job Proportion"),
                     dcc.Graph(
                         id="job-proportion-pie",
-                        figure=utils.get_job_propotion_pie_chart("France")
+                        figure=utils.get_job_propotion_pie_chart("China")
                     )
                 ],
             ),
         ],
     )
+
+
+@app.callback(
+    Output("multi-country-dropdown", "value"),
+    Output("job-proportion-pie", "figure"),
+    Input("single-country-dropdown", "value"),
+    State("multi-country-dropdown", "value"),
+)
+def update_job_proportion_pie_chart(selected_country, current_selected_countries):
+    if selected_country not in current_selected_countries:
+        current_selected_countries.append(selected_country)
+    return current_selected_countries, utils.get_job_propotion_pie_chart(selected_country)
+
+
+@app.callback(
+    Output("job-proportion-differnet-countries-polar", "figure"),
+    Input("multi-country-dropdown", "value"),
+)
+def update_job_proportion_polar_plot(selected_countries):
+    return utils.get_job_proportion_polar_plot(selected_countries).get_figure()
 
 
 def build_job_trend_chart_panel():
@@ -241,6 +288,15 @@ def build_job_trend_chart_panel():
                       figure=utils.get_salary_line_plot().get_figure())
         ]
     )
+
+
+@app.callback(
+    Output("salary-line-plot", "figure"),
+    Input("job-titles-multi-select", "value"),
+)
+def update_salary_line_plot(selected_job_titles):
+    return utils.get_salary_line_plot(job_titles=selected_job_titles).get_figure()
+
 
 ####################################### Match skills tab ##########################################################
 
@@ -342,17 +398,6 @@ def build_match_skills_chart_panel():
 
 def build_about_us_tab():
     pass
-
-####################################### Callbacks ##############################################################
-
-
-@ app.callback(Output("app-content", "children"), [Input("app-tabs", "value")])
-def render_tab_content(tab_switch):
-    if tab_switch == "job-trend":
-        return build_job_trend_tab()
-    elif tab_switch == "match-skills":
-        return build_match_skills_tab()
-    return build_about_us_tab()
 
 
 ################################################################################################################

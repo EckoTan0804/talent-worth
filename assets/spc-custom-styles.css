@@ -602,6 +602,23 @@ body {
   background-color: #1d202d !important;
 }
 
+.confirm-button {
+  color: white !important;
+  background-color: #1d202d !important;
+  border: 1px solid #4B5460 !important;
+  border-radius: 4px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.confirm-button:hover {
+  color: #91dfd2 !important;
+  border-color: white !important;
+  background-color: #1d202d !important;
+}
+
+
+
 #card-1 P, #card-2 P {
   margin: 2rem;
   color: inherit;
