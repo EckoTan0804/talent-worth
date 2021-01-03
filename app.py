@@ -88,8 +88,66 @@ def build_tabs():
     )
 
 
+def build_about_us_tab():
+    GROUP_MEMBERS = [
+        "Grace Fan",
+        "Katharina Koenig",
+        "Linh Nguyen",
+        "Vinuzan Ratnasingam",
+        "Haobin Tan"
+    ]
+    return html.Div(
+        # className="status-container",
+        children=[
+            html.Img(
+                src=app.get_asset_url("talent-worth-logo.png"),
+                style={'height': '30%', 'width': '30%'}
+            ),
+            html.Br(),
+            html.Br(),
+            html.H3("Group Members", style={"font-weight": "bold"}),
+            html.Div(children=[html.H6(member) for member in GROUP_MEMBERS]),
+            html.Br(),
+            html.H3("Mentor/Tutor", style={"font-weight": "bold"}),
+            html.H6("Lisa Zaeuner"),
+            html.Br(),
+            html.H3("Special Thanks", style={"font-weight": "bold"}),
+            html.Div(
+                children=[
+                    html.Img(
+                        src=app.get_asset_url("AiTalents.png"),
+                        style={
+                            'height': '15%',
+                            'width': '15%',
+                            "marginRight": 10,
+                        }
+                    ),
+                    html.Img(
+                        src=app.get_asset_url("TechQuartier.jpg"),
+                        style={
+                            'height': '10%',
+                            'width': '10%',
+                            "marginRight": 20,
+                        }
+                    ),
+                ],
+                style={
+                    "justifyContent": "center",
+                    'verticalAlign': 'middle',
+                }),
+            html.Br(),
+            html.Br(),
+        ],
+        style={
+            "justifyContent": "center",
+            "textAlign": "center",
+        }
+    )
+
+
 job_trend_tab = build_job_trend_tab()
 match_skills_tab = build_match_skills_tab()
+about_us_tab = build_about_us_tab()
 
 
 @ app.callback(Output("app-content", "children"), [Input("app-tabs", "value")])
@@ -99,7 +157,7 @@ def render_tab_content(tab_switch):
         return job_trend_tab
     elif tab_switch == "match-skills":
         return match_skills_tab
-    return build_about_us_tab()
+    return about_us_tab
 
 
 ####################################### Job trend tab callbacks ###########################################################
